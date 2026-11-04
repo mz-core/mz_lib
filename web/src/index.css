@@ -1,0 +1,102 @@
+:root {
+  font-family: var(--mz-font, Inter, system-ui, sans-serif);
+  color: #f4f4f5;
+  font-synthesis: none;
+  --mz-accent: #e7e7e7;
+  --mz-radius: 10px;
+  --mz-surface: rgba(18, 18, 20, .96);
+  --mz-border: rgba(255, 255, 255, .11);
+}
+
+* { box-sizing: border-box; }
+html, body, #root { width: 100%; height: 100%; margin: 0; overflow: hidden; background: transparent; }
+button, input, textarea, select { font: inherit; }
+.app { position: relative; width: 100%; height: 100%; pointer-events: none; }
+.panel { border: 1px solid var(--mz-border); border-radius: var(--mz-radius); background: var(--mz-surface); box-shadow: 0 18px 55px rgba(0, 0, 0, .42); backdrop-filter: blur(18px); pointer-events: auto; }
+.notices { position: absolute; top: 4vh; right: 2.5vw; display: flex; width: min(360px, 92vw); flex-direction: column; gap: 10px; }
+.notice { display: flex; gap: 12px; padding: 14px 16px; animation: enter .2s ease-out; }
+.notice-icon { display: grid; width: 28px; height: 28px; flex: none; place-items: center; border-radius: 7px; color: var(--tone); background: rgba(255, 255, 255, .08); }
+.notice h3, .notice p { margin: 0; }
+.notice h3 { font-size: 14px; }
+.notice p { margin-top: 3px; color: #a1a1aa; font-size: 13px; line-height: 1.45; }
+.success { --tone: #74c69d; }
+.error { --tone: #ff7b7b; }
+.warning { --tone: #f0c674; }
+.info { --tone: #8cb4ff; }
+.text-ui { position: absolute; top: 50%; right: 3vw; display: flex; align-items: center; gap: 10px; padding: 10px 13px; transform: translateY(-50%); font-size: 14px; }
+.key { display: grid; min-width: 30px; height: 30px; place-items: center; border: 1px solid var(--mz-border); border-radius: 7px; background: #29292d; font-size: 12px; font-weight: 700; }
+.modal-wrap { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0, 0, 0, .32); pointer-events: auto; }
+.modal { width: min(440px, 92vw); padding: 20px; }
+.modal h2 { margin: 0 0 6px; font-size: 20px; }
+/* Confirmacao discreta (variant = 'compact'): sem backdrop, so o painel flutuando. */
+.alert-compact-wrap { position: absolute; inset: auto 0 9vh 0; display: grid; place-items: center; pointer-events: none; }
+.alert-compact { width: min(360px, 92vw); padding: 14px 16px; pointer-events: auto; animation: alert-in .18s ease-out; }
+.alert-compact h2 { margin: 0 0 4px; font-size: 16px; }
+.alert-compact .actions { margin-top: 14px; }
+.muted { color: #a1a1aa; font-size: 13px; }
+.items { display: flex; max-height: 52vh; flex-direction: column; gap: 7px; margin-top: 16px; overflow: auto; }
+.item { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border: 1px solid transparent; border-radius: 8px; color: #fafafa; background: #252529; text-align: left; cursor: pointer; }
+.item:hover, .item:focus { border-color: rgba(255, 255, 255, .22); outline: none; }
+.item:disabled { cursor: not-allowed; opacity: .45; }
+.item strong { display: block; font-size: 14px; }
+.item small { display: block; margin-top: 3px; color: #a1a1aa; }
+.actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+.button { display: inline-flex; align-items: center; gap: 7px; padding: 9px 14px; border: 1px solid var(--mz-border); border-radius: 8px; color: #fafafa; background: #29292d; cursor: pointer; }
+.button kbd, .taskbar kbd { display: grid; min-width: 24px; height: 24px; place-items: center; border: 1px solid currentColor; border-radius: 5px; font-size: 11px; font-weight: 800; }
+.button.primary { color: #171719; background: var(--mz-accent); }
+.fields { display: flex; max-height: 50vh; flex-direction: column; gap: 13px; margin-top: 18px; overflow: auto; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { color: #d4d4d8; font-size: 12px; }
+.field input, .field textarea, .field select { width: 100%; padding: 10px; border: 1px solid var(--mz-border); border-radius: 8px; color: #fafafa; background: #252529; outline: none; }
+.field input:focus, .field textarea:focus, .field select:focus { border-color: #71717a; }
+.progress-wrap { position: absolute; bottom: 6vh; left: 50%; width: min(410px, 80vw); padding: 14px 16px; transform: translateX(-50%); }
+.progress-title { display: flex; justify-content: space-between; font-size: 13px; }
+.track { height: 5px; margin-top: 10px; overflow: hidden; border-radius: 99px; background: #34343a; }
+.fill { width: 0; height: 100%; background: var(--mz-accent); animation: progress var(--duration, 5s) linear forwards; }
+.taskbar { position: absolute; bottom: 7vh; left: 50%; width: min(560px, 86vw); padding: 14px 16px; transform: translateX(-50%); }
+.taskbar header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.taskbar header div, .taskbar header span { display: block; }
+.taskbar header strong { font-size: 14px; }
+.taskbar header span { margin-top: 3px; color: #a1a1aa; font-size: 12px; }
+.skill-track { position: relative; height: 14px; margin-top: 14px; border-radius: 99px; background: #2b2b30; }
+.skill-target { position: absolute; height: 100%; border-radius: 99px; background: #74c69d; box-shadow: 0 0 16px rgba(116, 198, 157, .3); }
+.skill-marker { position: absolute; top: -5px; left: 0; width: 4px; height: 24px; border-radius: 3px; background: #fafafa; box-shadow: 0 0 10px rgba(255, 255, 255, .55); animation: skill var(--duration, 6500ms) linear forwards; }
+.skill-progress { position: absolute; bottom: max(6vh, 38px); left: 50%; display: grid; width: min(520px, calc(100vw - 48px)); min-height: 118px; grid-template-columns: minmax(0, 1fr); align-items: center; padding: 18px; border-color: rgba(255, 255, 255, .14); background: linear-gradient(145deg, rgba(24, 24, 27, .96), rgba(9, 9, 11, .94)); overflow: visible; transform: translateX(-50%); }
+.skill-progress-copy { min-width: 0; }
+.skill-progress-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; color: #f4f4f5; font-size: 13px; font-weight: 650; letter-spacing: .015em; }
+.skill-progress-heading strong { color: #f0c674; font-size: 22px; font-variant-numeric: tabular-nums; }
+.skill-progress-track { height: 8px; margin-top: 12px; overflow: hidden; border: 1px solid rgba(255, 255, 255, .08); border-radius: 99px; background: rgba(255, 255, 255, .08); }
+.skill-progress-track span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #d69e3f, #f0c674); box-shadow: 0 0 18px rgba(240, 198, 116, .28); transition: width .16s linear; }
+.skill-progress-meta { display: flex; align-items: center; gap: 12px; margin-top: 11px; color: #a1a1aa; font-size: 10px; text-transform: uppercase; letter-spacing: .07em; }
+.skill-progress-meta kbd { margin-left: auto; padding: 3px 6px; border: 1px solid rgba(255, 255, 255, .18); border-radius: 4px; color: #d4d4d8; background: rgba(255, 255, 255, .06); font-size: 9px; }
+.skill-dial { position: absolute; right: 20px; bottom: calc(100% + 14px); display: grid; width: 154px; height: 154px; place-items: center; border: 1px solid rgba(255, 255, 255, .14); border-radius: 50%; background: radial-gradient(circle, rgba(24, 24, 27, .98) 0 46%, rgba(9, 9, 11, .95) 47% 100%); box-shadow: 0 20px 50px rgba(0, 0, 0, .45); animation: skill-pop .16s ease-out; }
+.skill-dial svg { width: 138px; height: 138px; overflow: visible; }
+.skill-dial circle { fill: none; stroke-linecap: butt; }
+.skill-dial-ring { stroke: #34343a; stroke-width: 9; }
+.skill-dial-success { stroke: #d69e3f; stroke-width: 10; filter: drop-shadow(0 0 5px rgba(214, 158, 63, .42)); }
+.skill-dial-perfect { stroke: #fff; stroke-width: 11; filter: drop-shadow(0 0 5px rgba(255, 255, 255, .72)); }
+.skill-dial-pointer line { stroke: #ef4444; stroke-width: 3; filter: drop-shadow(0 0 4px rgba(239, 68, 68, .75)); }
+.skill-dial-pointer circle { fill: #ef4444; stroke: #18181b; stroke-width: 2; }
+.skill-dial > kbd { position: absolute; display: grid; min-width: 56px; height: 28px; place-items: center; border: 1px solid rgba(255, 255, 255, .24); border-radius: 5px; color: #fafafa; background: #27272a; font-size: 9px; font-weight: 800; letter-spacing: .05em; }
+.skill-feedback { position: absolute; right: 22px; bottom: calc(100% + 176px); padding: 5px 9px; border-radius: 4px; color: #fff; background: rgba(24, 24, 27, .92); font-size: 11px; font-weight: 850; letter-spacing: .12em; animation: skill-feedback .8s ease-out forwards; }
+.skill-feedback.perfect { color: #fff; }
+.skill-feedback.normal { color: #f0c674; }
+.skill-feedback.miss { color: #ff7b7b; }
+.spinner { position: absolute; top: 50%; left: 50%; display: flex; align-items: center; gap: 10px; padding: 12px 15px; transform: translate(-50%, -50%); }
+.spin { width: 18px; height: 18px; border: 2px solid #52525b; border-top-color: #fafafa; border-radius: 50%; animation: spin .75s linear infinite; }
+
+@keyframes enter { from { opacity: 0; transform: translateX(18px); } }
+@keyframes alert-in { from { opacity: 0; transform: translateY(10px); } }
+@keyframes progress { to { width: 100%; } }
+@keyframes skill { to { left: calc(100% - 4px); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes skill-pop { from { opacity: 0; transform: scale(.88); } }
+@keyframes skill-feedback { 0% { opacity: 0; transform: translateY(8px); } 18%, 70% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) {
+  .notice, .spinner .spin { animation-duration: .01ms !important; }
+  .fill, .skill-marker { animation-timing-function: linear; }
+}
+@media (max-width: 700px) {
+  .skill-progress { bottom: 28px; width: calc(100vw - 32px); }
+  .skill-dial { right: 8px; }
+}

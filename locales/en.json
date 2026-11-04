@@ -1,0 +1,10 @@
+{
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "close": "Close",
+  "loading": "Loading...",
+  "progress.cancelled": "Action cancelled",
+  "skill.success": "Skill check completed",
+  "skill.failed": "Skill check failed",
+  "callback.timeout": "The request timed out"
+}

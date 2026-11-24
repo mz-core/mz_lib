@@ -4,7 +4,7 @@ game 'gta5'
 name 'mz_lib'
 author 'mz_lib contributors'
 description 'Biblioteca standalone, modular e tipada para FiveM'
-version '1.0.0'
+version '1.0.2'
 lua54 'yes'
 
 ui_page 'web/dist/index.html'

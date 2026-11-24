@@ -7,11 +7,15 @@ import { applySkillCheck, clamp, createSkillCheckPlan, judgeSkillCheck, skillPro
 import type { Field, MenuItem, Notice, NuiMessage } from './types'
 
 type Overlay = { kind: string; data: Record<string, unknown> } | null
+type TextUi = { text: string; key?: string; variant?: string; x?: number; y?: number; expanded?: boolean; options?: string[]; selected?: number }
 const icons = { success: Check, error: X, warning: TriangleAlert, info: Info }
 
 export function App() {
   const [notices, setNotices] = useState<Notice[]>([])
-  const [textUi, setTextUi] = useState<{ text: string; key?: string } | null>(null)
+  const [textUi, setTextUi] = useState<TextUi | null>(null)
+  const [textUiClosing, setTextUiClosing] = useState(false)
+  const textUiVariant = useRef<string | undefined>(undefined)
+  const textUiTimer = useRef<number | undefined>(undefined)
   const [progress, setProgress] = useState<{ label?: string; duration?: number; circle?: boolean } | null>(null)
   const [spinner, setSpinner] = useState<{ label?: string } | null>(null)
   const [overlay, setOverlay] = useState<Overlay>(null)
@@ -23,8 +27,18 @@ export function App() {
         const notice = data as unknown as Notice
         setNotices((current) => [...current.filter((item) => item.id !== notice.id), notice])
         window.setTimeout(() => setNotices((current) => current.filter((item) => item.id !== notice.id)), notice.duration ?? 4000)
-      } else if (action === 'textUI:show') setTextUi(data as { text: string; key?: string })
-      else if (action === 'textUI:hide') setTextUi(null)
+      } else if (action === 'textUI:show') {
+        window.clearTimeout(textUiTimer.current)
+        textUiVariant.current = data.variant as string | undefined
+        setTextUiClosing(false)
+        setTextUi(data as TextUi)
+      } else if (action === 'textUI:hide') {
+        window.clearTimeout(textUiTimer.current)
+        if (textUiVariant.current === 'context') {
+          setTextUiClosing(true)
+          textUiTimer.current = window.setTimeout(() => setTextUi(null), 160)
+        } else setTextUi(null)
+      }
       else if (action === 'progress:show') setProgress(data as { label?: string; duration?: number; circle?: boolean })
       else if (action === 'progress:hide') setProgress(null)
       else if (action === 'spinner:show') setSpinner(data as { label?: string })
@@ -38,7 +52,7 @@ export function App() {
       else if (action.endsWith(':show')) setOverlay({ kind: action.split(':')[0], data })
     }
     window.addEventListener('message', onMessage)
-    return () => window.removeEventListener('message', onMessage)
+    return () => { window.removeEventListener('message', onMessage); window.clearTimeout(textUiTimer.current) }
   }, [])
 
   const resolve = useCallback((result: unknown, expectedRequestId?: string) => {
@@ -72,7 +86,9 @@ export function App() {
         </article>
       })}
     </div>
-    {textUi && <div className="panel text-ui"><span className="key">{textUi.key ?? 'E'}</span><span>{textUi.text}</span></div>}
+    {textUi && (textUi.variant === 'context'
+      ? <div className={`context-prompt${textUi.expanded === false ? ' is-collapsed' : ''}${(textUi.x ?? 0.5) > 0.78 ? ' is-left' : ''}${textUiClosing ? ' is-closing' : ''}`} style={{ left: `${Math.max(2, Math.min(98, (textUi.x ?? 0.5) * 100))}%`, top: `${Math.max(textUi.options?.length ? 15 : 5, Math.min(textUi.options?.length ? 85 : 95, (textUi.y ?? 0.55) * 100))}%` }}><span className="context-key"><span className="context-key-text">{textUi.key ?? 'E'}</span></span>{textUi.options?.length ? <div className="context-options" role="listbox" aria-label="Ações disponíveis">{textUi.options.map((option, index) => <div className={`context-option${index + 1 === textUi.selected ? ' is-selected' : ''}`} role="option" aria-selected={index + 1 === textUi.selected} key={index}>{option}</div>)}<small>↑↓ / roda · E selecionar · ESC fechar</small></div> : <span className="context-label">{textUi.text}</span>}</div>
+      : <div className="panel text-ui"><span className="key">{textUi.key ?? 'E'}</span><span>{textUi.text}</span></div>)}
     {progress && <div className="panel progress-wrap"><div className="progress-title"><span>{progress.label ?? 'Processando...'}</span><span>ESC</span></div><div className="track"><div className="fill" style={{ '--duration': `${progress.duration ?? 5000}ms` } as React.CSSProperties} /></div></div>}
     {spinner && <div className="panel spinner"><span className="spin"/><span>{spinner.label ?? 'Carregando...'}</span></div>}
     {overlay?.kind === 'context' && <ContextMenu data={overlay.data} resolve={resolve} />}

@@ -24,6 +24,24 @@ button, input, textarea, select { font: inherit; }
 .warning { --tone: #f0c674; }
 .info { --tone: #8cb4ff; }
 .text-ui { position: absolute; top: 50%; right: 3vw; display: flex; align-items: center; gap: 10px; padding: 10px 13px; transform: translateY(-50%); font-size: 14px; }
+.context-prompt { position: absolute; display: flex; align-items: center; width: max-content; max-width: min(300px, 30vw); transform: translateY(-50%); color: #fff; font-size: 14px; font-weight: 600; line-height: 1.25; text-shadow: 0 1px 2px #000, 0 2px 7px #000; pointer-events: none; animation: context-in .16s ease-out; }
+.context-prompt.is-left { flex-direction: row-reverse; transform: translate(calc(-100% + 23px), -50%); }
+.context-prompt.is-closing { opacity: 0; transition: opacity .16s ease; }
+.context-key { display: grid; width: 23px; height: 23px; flex: none; place-items: center; border: 1px solid rgba(255,255,255,.85); border-radius: 50%; background: rgba(18,18,20,.65); font-size: 12px; font-weight: 700; transition: width .18s ease, height .18s ease, background-color .18s ease; }
+.context-key-text { transition: opacity .14s ease; }
+.context-label { max-width: 260px; margin-left: 8px; overflow: hidden; white-space: nowrap; transition: max-width .18s ease, margin .18s ease, opacity .14s ease; }
+.context-prompt.is-left .context-label { margin-right: 8px; margin-left: 0; }
+.context-options { display: grid; gap: 3px; margin-left: 8px; min-width: 172px; max-width: min(260px, 28vw); animation: context-in .16s ease-out; }
+.context-prompt.is-left .context-options { margin-right: 8px; margin-left: 0; }
+.context-option { padding: 5px 9px; border-left: 2px solid transparent; border-radius: 2px; background: rgba(15, 18, 19, .75); color: rgba(255,255,255,.72); font-size: 12px; line-height: 1.3; }
+.context-option.is-selected { border-left-color: #55d7a2; background: rgba(25, 48, 42, .88); color: #fff; }
+.context-options small { padding: 2px 4px; color: rgba(255,255,255,.7); font-size: 9px; font-weight: 500; white-space: nowrap; }
+.context-prompt.is-collapsed .context-key { width: 9px; height: 9px; background: transparent; }
+.context-prompt.is-left.is-collapsed { transform: translate(calc(-100% + 9px), -50%); }
+.context-prompt.is-collapsed .context-key-text, .context-prompt.is-collapsed .context-label { opacity: 0; }
+.context-prompt.is-collapsed .context-label { max-width: 0; margin: 0; }
+@keyframes context-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .context-prompt { animation: none; } .context-prompt.is-closing, .context-key, .context-key-text, .context-label { transition: none; } }
 .key { display: grid; min-width: 30px; height: 30px; place-items: center; border: 1px solid var(--mz-border); border-radius: 7px; background: #29292d; font-size: 12px; font-weight: 700; }
 .modal-wrap { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0, 0, 0, .32); pointer-events: auto; }
 .modal { width: min(440px, 92vw); padding: 20px; }
